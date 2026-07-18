@@ -56,7 +56,7 @@ export default function FAQ() {
             <div 
               key={index} 
               style={{ 
-                backgroundColor: 'var(--text-primary)', 
+                backgroundColor: 'var(--bg-primary)', 
                 borderRadius: 'var(--radius)', 
                 overflow: 'hidden',
                 boxShadow: '0 4px 6px rgba(0,0,0,0.02)'

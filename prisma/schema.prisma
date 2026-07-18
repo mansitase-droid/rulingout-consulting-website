@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  role         String   // e.g., 'client', 'admin'
+  roleType     String   // e.g., 'doctor', 'client_admin', 'super_admin'
+  password     String   // Note: In production, this should be hashed
+  organization String
+  status       String   @default("active")
+  lastLogin    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Task {
+  id               String   @id @default(cuid())
+  type             String
+  title            String
+  organizationName String
+  doctorId         String
+  doctorName       String
+  targetMonth      String
+  status           String
+  script           String?
+  videoUrl         String?
+  assignedEmp      String?
+  editCount        Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  taskId    String
+  user      String
+  role      String
+  text      String
+  time      String
+  createdAt DateTime @default(now())
+}
+
+model Policy {
+  id               String   @id @default(cuid())
+  organizationName String   @unique
+  maxRevisions     Int
+  deadline         Int
+  quota            String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Podcast {
+  id               String   @id @default(cuid())
+  organizationName String
+  speakerName      String
+  title            String
+  script           String?
+  status           String   @default("draft")
+  editsRemaining   Int      @default(3)
+  scheduleDate     String?
+  scheduleTime     String?
+  scheduleStatus   String   @default("none")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Notification {
+  id               String   @id @default(cuid())
+  organizationName String
+  clientName       String
+  message          String
+  podcastId        String
+  read             Boolean  @default(false)
+  timestamp        String
+  createdAt        DateTime @default(now())
+}

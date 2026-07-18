@@ -77,20 +77,24 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Right Column - Logo Graphic */}
+          {/* Right Column - Graphic */}
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{
               position: 'relative',
               width: '100%',
               maxWidth: '500px',
-              aspectRatio: '1/1',
-              filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))'
+              aspectRatio: '4/5',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+              border: '1px solid var(--border-color)'
             }}>
               <Image 
-                src="/assets/logo.png" 
-                alt="Rulingout Consulting Services Graphic" 
+                src="/assets/hero_doctor.jpg" 
+                alt="Healthcare Consulting Professional" 
                 fill 
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: 'cover' }}
+                sizes="(max-width: 768px) 100vw, 500px"
                 priority
               />
             </div>

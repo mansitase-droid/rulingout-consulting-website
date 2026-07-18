@@ -37,6 +37,21 @@ function initDatabase() {
       localStorage.setItem('portal_policies', JSON.stringify(seedPolicies));
     }
   }
+  
+  // Background Cloud Sync on Load
+  fetch('/api/portal/sync')
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.data) {
+        if (data.data.accounts && data.data.accounts.length > 0) localStorage.setItem('portal_accounts', JSON.stringify(data.data.accounts));
+        if (data.data.tasks && data.data.tasks.length > 0) localStorage.setItem('portal_tasks', JSON.stringify(data.data.tasks));
+        if (data.data.podcasts && data.data.podcasts.length > 0) localStorage.setItem('portal_podcasts', JSON.stringify(data.data.podcasts));
+        if (data.data.notifications && data.data.notifications.length > 0) localStorage.setItem('portal_notifications', JSON.stringify(data.data.notifications));
+        
+        // Dispatch event so UI can refresh if needed
+        window.dispatchEvent(new Event('cloudDataSynced'));
+      }
+    }).catch(err => console.error('Cloud sync failed:', err));
 }
 
 // Get Data
@@ -46,6 +61,7 @@ function getPodcasts() {
 
 function savePodcasts(podcasts) {
   localStorage.setItem('portal_podcasts', JSON.stringify(podcasts));
+  fetch('/api/portal/sync', { method: 'POST', body: JSON.stringify({ collection: 'podcasts', data: podcasts }) });
 }
 
 // Get Tasks
@@ -55,6 +71,7 @@ function getTasks() {
 
 function saveTasks(tasks) {
   localStorage.setItem('portal_tasks', JSON.stringify(tasks));
+  fetch('/api/portal/sync', { method: 'POST', body: JSON.stringify({ collection: 'tasks', data: tasks }) });
 }
 
 // Get Logs
@@ -82,6 +99,7 @@ function getNotifications() {
 
 function saveNotifications(notifs) {
   localStorage.setItem('portal_notifications', JSON.stringify(notifs));
+  fetch('/api/portal/sync', { method: 'POST', body: JSON.stringify({ collection: 'notifications', data: notifs }) });
 }
 
 // Auth Handlers
@@ -258,6 +276,7 @@ function addNewClient(name, email, password, organizationName) {
   });
   
   localStorage.setItem('portal_accounts', JSON.stringify(accounts));
+  fetch('/api/portal/sync', { method: 'POST', body: JSON.stringify({ collection: 'accounts', data: accounts }) });
   return { success: true };
 }
 
@@ -302,6 +321,7 @@ function deleteClient(email) {
     saveNotifications(updatedNotifs);
   }
 
+  fetch('/api/portal/sync', { method: 'POST', body: JSON.stringify({ collection: 'accounts', data: updatedAccounts }) });
   return { success: true };
 }
 
