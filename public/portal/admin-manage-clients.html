@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Clients | Admin Control Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./portal.css">
+<style>
+/* Page Specific Nav updates */
+.admin-sub-nav {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin-right: auto;
+  margin-left: 3rem;
+}
+.admin-sub-nav a {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: var(--transition);
+}
+.admin-sub-nav a:hover,
+.admin-sub-nav li.active a {
+  color: var(--orange);
+}
+
+@media (max-width: 768px) {
+  .admin-sub-nav {
+    display: none; /* Hide sub nav on mobile, fallback to hamburger if needed, or keep simpler mobile navbar */
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- BLUEPRINT FIXED BACKGROUND LINES -->
+<div class="blueprint-grid">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<div class="ambient-glow-1"></div>
+<div class="ambient-glow-2"></div>
+
+<nav id="navbar">
+  <a href="./index.html" class="nav-logo">
+    <img src="./logo.png" alt="Rulingout">
+  </a>
+  
+  <ul class="admin-sub-nav">
+    <li><a href="./admin-dashboard.html">Control Board</a></li>
+    <li class="active"><a href="./admin-manage-clients.html">Manage Clients</a></li>
+  </ul>
+
+  <div class="user-badge">
+    <span class="user-name" id="admin-display-name">Rulingout Admin</span>
+    <button class="btn-logout" onclick="logoutUser()">Log Out</button>
+  </div>
+</nav>
+
+<div class="portal-container">
+  <!-- DASHBOARD TITLE -->
+  <div class="portal-header">
+    <div>
+      <div class="badge" style="margin-bottom: 0.5rem;">
+        <div class="badge-dot"></div>
+        Admin Portal
+      </div>
+      <h2>Client Accounts Directory</h2>
+    </div>
+    <a href="./admin-dashboard.html" style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-dim); text-decoration: none; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+      <svg style="width:14px; height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+      Back to Control Board
+    </a>
+  </div>
+
+  <div class="portal-grid">
+    <!-- LEFT COLUMN: Forms -->
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+      <!-- Register Client Form -->
+      <div class="spotlight-card">
+        <div class="spotlight-card-inner glass-form-inner" style="padding: 2.2rem;">
+          <h3 style="font-size: 1.4rem; color: var(--white); margin-bottom: 1.2rem;">Register Client Account</h3>
+          
+          <form id="admin-register-client-form" onsubmit="handleRegisterClientSubmit(event)">
+            <div class="portal-form-group">
+              <label for="reg-name">Client / Brand Name</label>
+              <input type="text" id="reg-name" class="portal-input" placeholder="e.g. Dr. Sarah Jenkins" required>
+            </div>
+            
+            <div class="portal-form-group">
+              <label for="reg-email">Access Email Address</label>
+              <input type="email" id="reg-email" class="portal-input" placeholder="sarah@rulingout.com" required>
+            </div>
+
+            <div class="portal-form-group">
+              <label for="reg-org">Organization / Clinic Name</label>
+              <input type="text" id="reg-org" class="portal-input" placeholder="e.g. DermaCare Clinic" required>
+            </div>
+
+            <div class="portal-form-group" style="margin-bottom: 1.8rem;">
+              <label for="reg-password">Access Password</label>
+              <input type="password" id="reg-password" class="portal-input" placeholder="Initial access password" required>
+            </div>
+
+            <button type="submit" class="btn-pri" style="width: 100%; background: #00c853; box-shadow: 0 4px 15px rgba(0, 200, 83, 0.2);">Register Client</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Backup Export card -->
+      <div class="spotlight-card">
+        <div class="spotlight-card-inner glass-form-inner" style="padding: 2rem; text-align: left; display: flex; flex-direction: column; gap: 1.2rem;">
+          <h4 style="font-size: 1.1rem; color: var(--text-soft); margin-bottom: 0.2rem; text-transform: uppercase; font-family: 'Bebas Neue', sans-serif;">Database Tools</h4>
+          <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; margin: 0;">Export active profiles as PDF reports or backup/restore records using local JSON files.</p>
+          
+          <button type="button" class="btn-sec" onclick="exportDataBackupPDF()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0.6rem;">
+            <svg style="width:16px;height:16px;color:var(--orange);" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Export PDF Report
+          </button>
+
+          <button type="button" class="btn-sec" onclick="exportDatabaseJSON()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0.6rem; margin-top: -5px;">
+            <svg style="width:16px;height:16px;color:var(--orange);" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Export Backup (JSON)
+          </button>
+
+          <button type="button" class="btn-sec" onclick="resetDatabaseToDefault()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0.6rem; margin-top: -5px; border-color: #ff3d00; color: #ff3d00;">
+            <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            Reset Database (Defaults)
+          </button>
+
+          <div style="border-top: 1px dashed var(--border); padding-top: 1rem; display: flex; flex-direction: column; gap: 8px;">
+            <label for="import-db-file" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-soft); letter-spacing: 0.05em;">Import Backup (JSON)</label>
+            <input type="file" id="import-db-file" accept=".json" style="display: none;" onchange="handleDatabaseImport(event)">
+            <button type="button" class="btn-pri" onclick="document.getElementById('import-db-file').click()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0.6rem; background: #00b0ff; box-shadow: 0 4px 15px rgba(0, 176, 255, 0.2);">
+              <svg style="width:16px;height:16px;color:#ffffff;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+              Import JSON File
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Client table list -->
+    <div>
+      <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-soft); letter-spacing: 0.05em; text-transform: uppercase;">Active Clients Registry</h3>
+      
+      <div class="overview-table-wrapper">
+        <table class="overview-table">
+          <thead>
+            <tr>
+              <th>Client / Brand</th>
+              <th>Login Email</th>
+              <th>Password</th>
+              <th style="text-align: right; padding-right: 1.5rem;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="clients-list-tbody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Password Reset -->
+<div class="modal-wrapper" id="password-reset-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10000; align-items: center; justify-content: center;">
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(43, 45, 66, 0.8); backdrop-filter: blur(8px);" onclick="closeResetModal()"></div>
+  <div class="spotlight-card" style="width: 100%; max-width: 440px; z-index: 10001; position: relative;">
+    <div class="spotlight-card-inner glass-form-inner" style="padding: 2.5rem;">
+      <h3 style="font-size: 1.6rem; color: var(--white); margin-bottom: 0.5rem;">Reset Client Password</h3>
+      <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1.5rem;">Client: <strong id="reset-target-email" style="color: var(--orange);">email@rulingout.com</strong></p>
+      
+      <form id="modal-password-reset-form" onsubmit="handleResetModalSubmit(event)">
+        <input type="hidden" id="reset-modal-email">
+        <div class="portal-form-group" style="margin-bottom: 2rem;">
+          <label for="reset-modal-new-password">New Access Password</label>
+          <input type="password" id="reset-modal-new-password" class="portal-input" placeholder="Enter new password" required>
+        </div>
+        <div style="display: flex; gap: 15px; justify-content: flex-end;">
+          <button type="button" class="btn-sec" style="padding: 0.6rem 1.2rem;" onclick="closeResetModal()">Cancel</button>
+          <button type="submit" class="btn-pri" style="padding: 0.6rem 1.5rem;">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer style="margin-top: 6rem;">
+  <div class="container">
+    <div class="footer-logo">
+      <img src="./logo.png" alt="Rulingout">
+    </div>
+    <p class="copyright">© 2026 Rulingout Consulting Services. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="./main.js"></script>
+<script src="./database.js"></script>
+<script src="./portal.js"></script>
+<script>
+// Check Authentication
+const adminUser = checkAuthentication('admin');
+
+if (adminUser) {
+  document.getElementById('admin-display-name').innerText = adminUser.name;
+  loadClientsTable();
+}
+
+function loadClientsTable() {
+  const accounts = JSON.parse(localStorage.getItem('portal_accounts')) || [];
+  const tbody = document.getElementById('clients-list-tbody');
+  tbody.innerHTML = '';
+
+  const clients = accounts.filter(acc => acc.role === 'client');
+
+  if (clients.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No registered client accounts found.</td></tr>`;
+    return;
+  }
+
+  // Group clients by Organization
+  const orgGroups = {};
+  clients.forEach(c => {
+    const org = c.organization || 'Standalone';
+    if (!orgGroups[org]) {
+      orgGroups[org] = [];
+    }
+    orgGroups[org].push(c);
+  });
+
+  // Loop through groups and populate table
+  Object.keys(orgGroups).forEach(orgName => {
+    // Render Organization Header Row
+    const headerTr = document.createElement('tr');
+    headerTr.innerHTML = `
+      <td colspan="4" style="background: rgba(255, 92, 0, 0.05); border-left: 3px solid var(--orange); padding: 0.8rem 1.2rem;">
+        <span style="font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--orange); letter-spacing: 0.08em; text-transform: uppercase;">
+          Organization: ${orgName}
+        </span>
+      </td>
+    `;
+    tbody.appendChild(headerTr);
+
+    // Render individual clients in this organization
+    orgGroups[orgName].forEach(c => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong style="color: var(--white); font-size: 0.95rem;">${c.name}</strong></td>
+        <td><code>${c.email}</code></td>
+        <td>
+          <span class="pw-masked" id="pw-mask-${c.email.replace(/[@.]/g, '_')}">••••••••</span>
+          <span class="pw-visible" id="pw-text-${c.email.replace(/[@.]/g, '_')}" style="display: none; font-family: monospace; color: var(--orange); font-weight: bold;">${c.password}</span>
+          <button onclick="togglePasswordVisibility('${c.email}')" style="background: transparent; border: none; color: var(--text-dim); cursor: pointer; margin-left: 8px; font-size: 0.72rem; text-decoration: underline;">Show</button>
+        </td>
+        <td style="text-align: right; padding-right: 1.5rem; display: flex; gap: 10px; justify-content: flex-end;">
+          <button class="btn-notif-action" onclick="openResetModal('${c.email}')" style="padding: 6px 12px; font-size: 0.7rem; border-color: #00b0ff; color: #00b0ff;">Reset PW</button>
+          <button class="btn-notif-action" onclick="handleRemoveClient('${c.email}', '${c.name}')" style="padding: 6px 12px; font-size: 0.7rem; border-color: #ff3d00; color: #ff3d00;">Remove</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+// Toggle password visibility in registry
+function togglePasswordVisibility(email) {
+  const idSafe = email.replace(/[@.]/g, '_');
+  const mask = document.getElementById('pw-mask-' + idSafe);
+  const text = document.getElementById('pw-text-' + idSafe);
+  
+  if (mask && text) {
+    if (mask.style.display === 'none') {
+      mask.style.display = 'inline';
+      text.style.display = 'none';
+      event.target.innerText = 'Show';
+    } else {
+      mask.style.display = 'none';
+      text.style.display = 'inline';
+      event.target.innerText = 'Hide';
+    }
+  }
+}
+
+// Actions
+function handleRegisterClientSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const org = document.getElementById('reg-org').value;
+  const password = document.getElementById('reg-password').value;
+
+  const result = addNewClient(name, email, password, org);
+  if (result.success) {
+    alert(`Client account successfully created!\nName: ${name}\nEmail: ${email}\nOrganization: ${org}\nPassword: ${password}`);
+    document.getElementById('admin-register-client-form').reset();
+    loadClientsTable();
+  } else {
+    alert(result.message);
+  }
+}
+
+function handleRemoveClient(email, name) {
+  const confirmDel = confirm(`Warning: Are you sure you want to completely remove client account "${name}" (${email})?\nThis will permanently delete all their assigned podcast scripts, schedules, and active notifications.`);
+  
+  if (confirmDel) {
+    const result = deleteClient(email);
+    if (result.success) {
+      alert(`Account "${name}" has been successfully removed.`);
+      loadClientsTable();
+    } else {
+      alert(result.message);
+    }
+  }
+}
+
+// Modal Password reset triggers
+function openResetModal(email) {
+  document.getElementById('reset-target-email').innerText = email;
+  document.getElementById('reset-modal-email').value = email;
+  document.getElementById('password-reset-modal').style.display = 'flex';
+  document.getElementById('reset-modal-new-password').focus();
+}
+
+function closeResetModal() {
+  document.getElementById('password-reset-modal').style.display = 'none';
+  document.getElementById('modal-password-reset-form').reset();
+}
+
+function handleResetModalSubmit(e) {
+  e.preventDefault();
+  const email = document.getElementById('reset-modal-email').value;
+  const newPassword = document.getElementById('reset-modal-new-password').value;
+
+  const result = resetClientPassword(email, newPassword);
+  if (result.success) {
+    alert(`Successfully reset password for ${email} to: ${newPassword}`);
+    closeResetModal();
+    loadClientsTable();
+  } else {
+    alert(result.message);
+  }
+}
+
+function exportDataBackupPDF() {
+  const accounts = JSON.parse(localStorage.getItem('portal_accounts')) || [];
+  const podcasts = JSON.parse(localStorage.getItem('portal_podcasts')) || [];
+
+  const backupWindow = window.open('', '_blank');
+  
+  let accountsHtml = accounts.map(a => `
+    <tr>
+      <td>${a.name}</td>
+      <td>${a.organization || (a.role === 'admin' ? 'Rulingout' : 'Standalone')}</td>
+      <td>${a.email}</td>
+      <td style="text-transform: uppercase; font-weight: bold;">${a.role}</td>
+      <td><code>${a.password}</code></td>
+    </tr>
+  `).join('');
+
+  let podcastsHtml = podcasts.map(p => `
+    <tr style="page-break-inside: avoid;">
+      <td>
+        <strong>${p.title}</strong><br>
+        <span style="font-size: 0.8rem; color: #555;">ID: ${p.id}</span>
+      </td>
+      <td>${p.organizationName || 'N/A'}</td>
+      <td>${p.speakerName}</td>
+      <td style="text-transform: uppercase; font-weight: bold;">${p.status}</td>
+      <td>${p.editsRemaining}</td>
+      <td>${p.scheduleStatus !== 'none' ? `${p.scheduleDate} at ${p.scheduleTime}` : 'Not scheduled'}</td>
+    </tr>
+  `).join('');
+
+  backupWindow.document.write(`
+    <html>
+    <head>
+      <title>Rulingout Portal Backup - Export</title>
+      <style>
+        body {
+          font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+          color: #333;
+          margin: 40px;
+          line-height: 1.5;
+        }
+        h1 {
+          color: #ff5c00;
+          font-size: 24px;
+          border-bottom: 2px solid #ff5c00;
+          padding-bottom: 10px;
+          margin-bottom: 30px;
+        }
+        h2 {
+          font-size: 18px;
+          margin-top: 40px;
+          color: #111;
+          border-bottom: 1px solid #ccc;
+          padding-bottom: 5px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 15px;
+          margin-bottom: 30px;
+        }
+        th, td {
+          border: 1px solid #ddd;
+          padding: 10px;
+          text-align: left;
+          font-size: 13px;
+        }
+        th {
+          background-color: #f8f8f8;
+          font-weight: bold;
+        }
+        .header-info {
+          display: flex;
+          justify-content: space-between;
+          font-size: 12px;
+          color: #666;
+          margin-bottom: 30px;
+        }
+        @media print {
+          body {
+            margin: 20px;
+          }
+          button {
+            display: none;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Rulingout Consulting Portal - Database Backup</h1>
+      <div class="header-info">
+        <span>Export Date: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</span>
+        <span>Target: LocalStorage Backup (Static State)</span>
+      </div>
+      
+      <h2>1. User & Client Accounts</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Organization</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Password</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${accountsHtml}
+        </tbody>
+      </table>
+ 
+      <h2>2. Podcast Scripts & Scheduling Logs</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Podcast Episode</th>
+            <th>Organization</th>
+            <th>Speaker</th>
+            <th>Status</th>
+            <th>Edits Left</th>
+            <th>Schedule</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${podcastsHtml}
+        </tbody>
+      </table>
+
+      <div style="margin-top: 50px; text-align: center;">
+        <button onclick="window.print();" style="background: #ff5c00; color: white; border: none; padding: 12px 24px; font-weight: bold; cursor: pointer; border-radius: 4px;">Print / Save as PDF</button>
+      </div>
+      
+      ${'<'}script>
+        window.onload = function() {
+          setTimeout(function() {
+            window.print();
+          }, 300);
+        };
+      ${'<'}/script>
+    </body>
+    </html>
+  `);
+  backupWindow.document.close();
+}
+
+// PDF & JSON Export Helpers
+function exportDatabaseJSON() {
+  const db = {
+    accounts: JSON.parse(localStorage.getItem('portal_accounts')) || [],
+    podcasts: JSON.parse(localStorage.getItem('portal_podcasts')) || [],
+    notifications: JSON.parse(localStorage.getItem('portal_notifications')) || []
+  };
+  
+  const jsonStr = JSON.stringify(db, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `database_backup_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function handleDatabaseImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const db = JSON.parse(e.target.result);
+      
+      if (!db.accounts || !Array.isArray(db.accounts) || !db.podcasts || !Array.isArray(db.podcasts)) {
+        throw new Error('Invalid database format. Must contain accounts and podcasts arrays.');
+      }
+      
+      localStorage.setItem('portal_accounts', JSON.stringify(db.accounts));
+      localStorage.setItem('portal_podcasts', JSON.stringify(db.podcasts));
+      if (db.notifications && Array.isArray(db.notifications)) {
+        localStorage.setItem('portal_notifications', JSON.stringify(db.notifications));
+      } else {
+        localStorage.setItem('portal_notifications', JSON.stringify([]));
+      }
+      
+      alert('Database successfully imported and restored from JSON file!');
+      loadClientsTable();
+      
+    } catch (err) {
+      alert('Failed to import database file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function resetDatabaseToDefault() {
+  const confirmReset = confirm("Are you sure you want to reset the database? This will delete all client accounts, podcast scripts, and schedules created in this session, and restore the initial defaults from database.js.");
+  if (confirmReset) {
+    localStorage.removeItem('portal_accounts');
+    localStorage.removeItem('portal_podcasts');
+    localStorage.removeItem('portal_notifications');
+    initDatabase(); // Reseeds from database.js
+    loadClientsTable();
+    alert("Database has been successfully reset to defaults!");
+  }
+}
+</script>
+</body>
+</html>

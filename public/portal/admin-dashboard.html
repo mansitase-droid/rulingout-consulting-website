@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Control Center | Rulingout Consulting Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./portal.css">
+<style>
+/* Page Specific Nav updates */
+.admin-sub-nav {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin-right: auto;
+  margin-left: 3rem;
+}
+.admin-sub-nav a {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: var(--transition);
+}
+.admin-sub-nav a:hover,
+.admin-sub-nav li.active a {
+  color: var(--orange);
+}
+
+@media (max-width: 768px) {
+  .admin-sub-nav {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- BLUEPRINT FIXED BACKGROUND LINES -->
+<div class="blueprint-grid">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<div class="ambient-glow-1"></div>
+<div class="ambient-glow-2"></div>
+
+<nav id="navbar">
+  <a href="./index.html" class="nav-logo">
+    <img src="./logo.png" alt="Rulingout">
+  </a>
+  
+  <ul class="admin-sub-nav">
+    <li class="active"><a href="./admin-dashboard.html">Control Board</a></li>
+    <li><a href="./admin-manage-clients.html">Manage Clients</a></li>
+  </ul>
+
+  <div class="user-badge">
+    <span class="user-name" id="admin-display-name">Rulingout Admin</span>
+    <button class="btn-logout" onclick="logoutUser()">Log Out</button>
+  </div>
+</nav>
+
+<div class="portal-container">
+  <!-- Rulingout Studio Portal SWITCH BANNER -->
+  <div style="background: rgba(20, 184, 166, 0.15); border: 1px dashed #14b8a6; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <span style="font-size: 0.85rem; font-weight: 600; color: var(--white);">🚀 Try the new high-fidelity Kanban Production Pipeline for multi-role agency workflows.</span>
+    <a href="./apex-dashboard.html" class="btn-pri" style="padding: 0.5rem 1.2rem; font-size: 0.75rem; background: #14b8a6; box-shadow: 0 4px 15px rgba(20, 184, 166, 0.2);">Open Rulingout Studio Portal</a>
+  </div>
+
+  <!-- DASHBOARD TITLE -->
+  <div class="portal-header">
+    <div>
+      <div class="badge" style="margin-bottom: 0.5rem;">
+        <div class="badge-dot"></div>
+        Admin Portal
+      </div>
+      <h2>Production Control Center</h2>
+    </div>
+    <a href="./index.html" style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-dim); text-decoration: none; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+      <svg style="width:14px; height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+      Back to website
+    </a>
+  </div>
+
+  <div class="portal-grid" style="grid-template-columns: 1fr;">
+    
+    <!-- 1. NOTIFICATIONS HUB -->
+    <div class="admin-notif-section">
+      <div class="notif-box">
+        <div class="notif-header">
+          <h3>
+            <svg style="width:20px;height:20px;color:var(--orange);" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+            Pending Script Approvals & Scheduling Alerts
+          </h3>
+          <span class="notif-badge" id="unread-notif-count">0 Pending</span>
+        </div>
+        <div class="notif-list" id="admin-notif-list">
+          <!-- Load notifications via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. FORMS & DATA GRID -->
+    <div class="admin-grid-main" style="margin-top: 1rem;">
+      
+      <!-- LEFT COLUMN: Forms -->
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        
+        <!-- FORM 1: Assign Podcast Script -->
+        <div class="spotlight-card">
+          <div class="spotlight-card-inner glass-form-inner" style="padding: 2.2rem;">
+            <h3 style="font-size: 1.4rem; color: var(--white); margin-bottom: 1.2rem;">Upload & Assign Script</h3>
+            
+            <form id="assign-script-form" onsubmit="handleAssignScript(event)">
+              <div class="portal-form-group">
+                <label for="assign-client-select">Target Client Organization</label>
+                <select id="assign-client-select" class="portal-select" required>
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+
+              <div class="portal-form-group">
+                <label for="assign-speaker-select">Speaker's Name</label>
+                <select id="assign-speaker-select" class="portal-select" required>
+                  <option value="" disabled selected>-- Select Organization First --</option>
+                </select>
+              </div>
+
+              <div class="portal-form-group">
+                <label for="assign-title">Podcast Episode Title</label>
+                <input type="text" id="assign-title" class="portal-input" placeholder="e.g. Advancements in Laser Facials" required>
+              </div>
+
+              <div class="portal-form-group" style="margin-bottom: 1.8rem;">
+                <label for="assign-script">Script Draft Content</label>
+                <textarea id="assign-script" class="portal-textarea" style="min-height: 150px;" placeholder="Input initial script draft..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn-pri" style="width:100%;">Upload & Provide 3 Edits</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- FORM 2: Propose Shoot Schedule -->
+        <div class="spotlight-card" id="schedule-shoot-section">
+          <div class="spotlight-card-inner glass-form-inner" style="padding: 2.2rem;">
+            <h3 style="font-size: 1.4rem; color: var(--white); margin-bottom: 1.2rem;">Schedule / Propose Shoot</h3>
+            
+            <form id="propose-schedule-form" onsubmit="handleProposeSchedule(event)">
+              <div class="portal-form-group">
+                <label for="schedule-pod-select">Confirmed Podcast Script</label>
+                <select id="schedule-pod-select" class="portal-select" required>
+                  <!-- Populated dynamically with confirmed status scripts -->
+                </select>
+              </div>
+
+              <div class="portal-form-group">
+                <label for="schedule-date">Shoot Date</label>
+                <input type="date" id="schedule-date" class="portal-input" required>
+              </div>
+
+              <div class="portal-form-group" style="margin-bottom: 1.8rem;">
+                <label for="schedule-time">Shoot Time Slot (e.g. 11:00 AM IST)</label>
+                <input type="text" id="schedule-time" class="portal-input" placeholder="e.g. 11:00 AM IST" required>
+              </div>
+
+              <button type="submit" class="btn-pri" style="width:100%; background: #00b0ff; box-shadow: 0 4px 15px rgba(0, 176, 255, 0.2);">Propose Timing Schedule</button>
+            </form>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- RIGHT COLUMN: Global Overview Table -->
+      <div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-soft); letter-spacing: 0.05em; text-transform: uppercase;">Global Podcast Overview</h3>
+        
+        <div class="overview-table-wrapper">
+          <table class="overview-table">
+            <thead>
+              <tr>
+                <th>Episode / Client</th>
+                <th>Speaker</th>
+                <th>Script Status</th>
+                <th>Edits Left</th>
+                <th>Shoot Schedule</th>
+              </tr>
+            </thead>
+            <tbody id="admin-overview-tbody">
+              <!-- Loaded via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer style="margin-top: 6rem;">
+  <div class="container">
+    <div class="footer-logo">
+      <img src="./logo.png" alt="Rulingout">
+    </div>
+    <p class="copyright">© 2026 Rulingout Consulting Services. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="./main.js"></script>
+<script src="./database.js"></script>
+<script src="./portal.js"></script>
+<script>
+// Check Authentication
+const adminUser = checkAuthentication('admin');
+
+if (adminUser) {
+  document.getElementById('admin-display-name').innerText = adminUser.name;
+  loadAdminDashboardData();
+  setupSpeakerDropdownListener();
+}
+
+function loadAdminDashboardData() {
+  renderNotifications();
+  populateDropdowns();
+  renderOverviewTable();
+}
+
+// 1. Render Notifications
+function renderNotifications() {
+  const notifs = getNotifications();
+  const listContainer = document.getElementById('admin-notif-list');
+  const countBadge = document.getElementById('unread-notif-count');
+  
+  listContainer.innerHTML = '';
+  const unreadNotifs = notifs.filter(n => !n.read);
+  countBadge.innerText = `${unreadNotifs.length} Pending`;
+
+  if (notifs.length === 0) {
+    listContainer.innerHTML = `<div class="empty-state">No pending approvals or scheduling tasks.</div>`;
+    return;
+  }
+
+  notifs.forEach(n => {
+    const item = document.createElement('div');
+    item.className = 'notif-item';
+    if (!n.read) {
+      item.style.borderLeft = '3px solid var(--orange)';
+    }
+
+    const timeString = new Date(n.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const dateString = new Date(n.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+    item.innerHTML = `
+      <div class="notif-item-body">
+        <p>${n.message}</p>
+        <span>${dateString} at ${timeString}</span>
+      </div>
+      ${!n.read ? `<button class="btn-notif-action" onclick="quickScheduleAction('${n.podcastId}')">Schedule</button>` : `<span style="font-size: 0.72rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase;">Handled</span>`}
+    `;
+    listContainer.appendChild(item);
+  });
+}
+
+// 2. Populate Dropdowns
+function populateDropdowns() {
+  const accounts = JSON.parse(localStorage.getItem('portal_accounts')) || [];
+  const clientSelect = document.getElementById('assign-client-select');
+  const resetClientSelect = document.getElementById('admin-reset-client-select');
+  
+  // Clients dropdown (Assign Script)
+  if (clientSelect) {
+    clientSelect.innerHTML = '<option value="" disabled selected>-- Select Client Organization --</option>';
+    const orgs = [...new Set(accounts.filter(a => a.role === 'client').map(a => a.organization))];
+    orgs.forEach(org => {
+      const opt = document.createElement('option');
+      opt.value = org;
+      opt.innerText = org;
+      clientSelect.appendChild(opt);
+    });
+  }
+
+  // Clients dropdown (Reset Password)
+  if (resetClientSelect) {
+    resetClientSelect.innerHTML = '<option value="" disabled selected>-- Select Client Account --</option>';
+    accounts.forEach(acc => {
+      if (acc.role === 'client') {
+        const opt = document.createElement('option');
+        opt.value = acc.email;
+        opt.innerText = `${acc.name} (${acc.email})`;
+        resetClientSelect.appendChild(opt);
+      }
+    });
+  }
+
+  // Confirmed Podcasts dropdown
+  const podcasts = getPodcasts();
+  const podSelect = document.getElementById('schedule-pod-select');
+  if (podSelect) {
+    podSelect.innerHTML = '<option value="" disabled selected>-- Select Confirmed Podcast --</option>';
+    const confirmedPods = podcasts.filter(p => p.status === 'confirmed');
+    confirmedPods.forEach(pod => {
+      const opt = document.createElement('option');
+      opt.value = pod.id;
+      opt.innerText = `${pod.organizationName} - ${pod.title} (${pod.speakerName})`;
+      podSelect.appendChild(opt);
+    });
+  }
+}
+
+// 3. Render Overview Table
+function renderOverviewTable() {
+  const podcasts = getPodcasts();
+  const tbody = document.getElementById('admin-overview-tbody');
+  tbody.innerHTML = '';
+
+  if (podcasts.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No podcasts in database.</td></tr>`;
+    return;
+  }
+
+  podcasts.forEach(pod => {
+    const tr = document.createElement('tr');
+    
+    // Status Badge classes
+    let statusClass = 'draft';
+    if (pod.status === 'confirmed') statusClass = 'confirmed';
+    if (pod.status === 'scheduled') statusClass = 'scheduled';
+
+    // Schedule status description
+    let scheduleInfo = '<span style="color: var(--text-dim);">No timing proposed</span>';
+    if (pod.scheduleStatus === 'proposed') {
+      scheduleInfo = `<span style="color: #00b0ff; font-weight:700;">Proposed:</span><br>${pod.scheduleDate} @ ${pod.scheduleTime}`;
+    } else if (pod.scheduleStatus === 'confirmed') {
+      scheduleInfo = `<span style="color: #00c853; font-weight:700;">Confirmed ✓:</span><br>${pod.scheduleDate} @ ${pod.scheduleTime}`;
+    }
+
+    tr.innerHTML = `
+      <td>
+        <strong style="color: var(--white); font-size: 0.92rem; display:block;">${pod.title}</strong>
+        <span style="font-size:0.75rem; color: var(--text-dim);">${pod.organizationName}</span>
+      </td>
+      <td><strong>${pod.speakerName}</strong></td>
+      <td><span class="status-badge ${statusClass}">${pod.status}</span></td>
+      <td style="text-align: center;"><strong class="${pod.editsRemaining === 0 ? 'edit-count zero' : 'edit-count'}">${pod.editsRemaining}</strong></td>
+      <td>${scheduleInfo}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Actions
+function handleAssignScript(e) {
+  e.preventDefault();
+  const orgName = document.getElementById('assign-client-select').value;
+  const speaker = document.getElementById('assign-speaker-select').value;
+  const title = document.getElementById('assign-title').value;
+  const script = document.getElementById('assign-script').value;
+
+  const result = uploadNewPodcast(orgName, speaker, title, script);
+  if (result.success) {
+    alert('Podcast assigned and script draft successfully uploaded for client!');
+    document.getElementById('assign-script-form').reset();
+    document.getElementById('assign-speaker-select').innerHTML = '<option value="" disabled selected>-- Select Organization First --</option>';
+    loadAdminDashboardData();
+  } else {
+    alert(result.message);
+  }
+}
+
+function setupSpeakerDropdownListener() {
+  const clientSelect = document.getElementById('assign-client-select');
+  const speakerSelect = document.getElementById('assign-speaker-select');
+  
+  if (clientSelect && speakerSelect) {
+    clientSelect.addEventListener('change', function() {
+      const selectedOrg = clientSelect.value;
+      const accounts = JSON.parse(localStorage.getItem('portal_accounts')) || [];
+      
+      speakerSelect.innerHTML = '<option value="" disabled selected>-- Select Speaker --</option>';
+      
+      const members = accounts.filter(a => a.role === 'client' && a.organization === selectedOrg);
+      members.forEach(member => {
+        const opt = document.createElement('option');
+        opt.value = member.name;
+        opt.innerText = member.name;
+        speakerSelect.appendChild(opt);
+      });
+
+      if (members.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = "";
+        opt.innerText = "-- No registered clients in this organization --";
+        speakerSelect.appendChild(opt);
+      }
+    });
+  }
+}
+
+function handleProposeSchedule(e) {
+  e.preventDefault();
+  const podId = document.getElementById('schedule-pod-select').value;
+  const date = document.getElementById('schedule-date').value;
+  const time = document.getElementById('schedule-time').value;
+
+  const result = schedulePodcastShoot(podId, date, time);
+  if (result.success) {
+    alert('Timing proposed successfully! It will reflect in the client\'s dashboard.');
+    document.getElementById('propose-schedule-form').reset();
+    loadAdminDashboardData();
+  } else {
+    alert(result.message);
+  }
+}
+
+// Shortcut from notification click
+function quickScheduleAction(podcastId) {
+  const podSelect = document.getElementById('schedule-pod-select');
+  podSelect.value = podcastId;
+  
+  // Smooth scroll to the scheduling form
+  document.getElementById('schedule-shoot-section').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
