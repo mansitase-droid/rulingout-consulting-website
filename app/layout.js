@@ -12,7 +12,7 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "Medical Doctor Branding & Hospital Revenue Audits | Rulingout Consulting",
+  title: "Rulingout Consulting Services",
   description: "Expert healthcare consulting firm in Gujarat. We specialize in medical doctor branding, hospital revenue leakage audits, and clinic setup advisory. Recover 3-10% of lost hospital revenues.",
   keywords: "healthcare consulting, hospital revenue audit, medical doctor branding, clinic setup Gujarat, healthcare video production, Mansi Tase",
   openGraph: {
