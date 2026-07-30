@@ -22,7 +22,10 @@ export const metadata = {
     siteName: "Rulingout Consulting",
     locale: "en_IN",
     type: "website",
-  }
+  },
+  verification: {
+    google: "QFZztBis5x8gGlg_y4-ireFficY4skloRNy2IIajX1U",
+  },
 }
 
 export default function RootLayout({ children }) {
